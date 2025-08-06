@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Character Counter</title>
+</head>
+<body>
+    <h2>Live Character Counter</h2>
+    <textarea id="textinput" placeholder="Start typing.."></textarea>
+    <br><br>
+    Character Counter :<span id="charCount">0</span>
+    <script>
+        const textarea=document.getElementById('textinput');
+        const counter=document.getElementById('charCount');
+        textarea.addEventListener('input', ()=>{
+            counter.textContent = textarea.value.length;
+            });
+    </script>
+</body>
+</html>
