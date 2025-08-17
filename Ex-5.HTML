@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #aaa;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Dynamic Product Filter with Dropdown</h2>
+
+<input type="text" id="productId" placeholder="Product ID"><br>
+<input type="text" id="productName" placeholder="Product Name"><br>
+<input type="number" id="productPrice" placeholder="Product Price"><br>
+<input type="text" id="productCategory" placeholder="Category"><br>
+
+<button onclick="addProduct()">Add Product</button>
+
+<br><br>
+
+<label for="categorySelect">Select Category:</label>
+<select id="categorySelect" onchange="filterByCategory()">
+    <option value="">-- Select Category --</option>
+</select>
+
+<table id="productTable">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+let products = [];
+let categories = [];
+
+function addProduct() {
+    let id = document.getElementById("productId").value.trim();
+    let name = document.getElementById("productName").value.trim();
+    let price = document.getElementById("productPrice").value.trim();
+    let category = document.getElementById("productCategory").value.trim();
+
+    if (!id  !name  !price || !category) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    products.push({ id, name, price, category });
+
+    if (!categories.includes(category)) {
+        categories.push(category);
+        let option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        document.getElementById("categorySelect").appendChild(option);
+    }
+
+    document.getElementById("productId").value = "";
+    document.getElementById("productName").value = "";
+    document.getElementById("productPrice").value = "";
+    document.getElementById("productCategory").value = "";
+}
+
+function filterByCategory() {
+    let selectedCategory = document.getElementById("categorySelect").value;
+    let tableBody = document.getElementById("productTable").querySelector("tbody");
+    tableBody.innerHTML = "";
+
+    if (!selectedCategory) return;
+
+    let filtered = products.filter(p => p.category === selectedCategory);
+
+    filtered.forEach(p => {
+        let row = tableBody.insertRow();
+        row.insertCell(0).textContent = p.id;
+        row.insertCell(1).textContent = p.name;
+        row.insertCell(2).textContent = p.price;
+        row.insertCell(3).textContent = p.category;
+    });
+}
+</script>
+
+</body>
+</html>
