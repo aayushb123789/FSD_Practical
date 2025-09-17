@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple SVG Drawing Tool</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+svg {
+    border: 2px solid #333;
+    background: #fff;
+    cursor: crosshair;
+}
+.toolbar {
+    margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+<h2>Simple SVG Drawing Tool</h2>
+<div class="toolbar">
+<label>Shape:
+<select id="shape">
+<option value="line">Line</option>
+<option value="rect">Rectangle</option>
+</select>
+</label>
+<label>Color:
+<input type="color" id="color" value="#000000">
+</label>
+</div>
+<svg id="canvas" width="600" height="400"></svg>
+
+<script>
+const svgNS = "http://www.w3.org/2000/svg";
+const canvas = document.getElementById("canvas");
+const shapeSelect = document.getElementById("shape");
+const colorInput = document.getElementById("color");
+
+let drawing = false;
+let startX, startY;
+let currentShape;
+
+canvas.addEventListener("mousedown", (e) => {
+drawing = true;
+startX = e.offsetX;
+startY = e.offsetY;
+
+if (shapeSelect.value === "line") {
+currentShape = document.createElementNS(svgNS, "line");
+currentShape.setAttribute("x1", startX);
+currentShape.setAttribute("y1", startY);
+currentShape.setAttribute("x2", startX);
+currentShape.setAttribute("y2", startY);
+} else if (shapeSelect.value === "rect") {
+currentShape = document.createElementNS(svgNS, "rect");
+currentShape.setAttribute("x", startX);
+currentShape.setAttribute("y", startY);
+currentShape.setAttribute("width", 0);
+currentShape.setAttribute("height", 0);
+}
+currentShape.setAttribute("stroke", colorInput.value);
+currentShape.setAttribute("fill", "none");
+canvas.appendChild(currentShape);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+if (!drawing) return;
+if (shapeSelect.value === "line") {
+currentShape.setAttribute("x2", e.offsetX);
+currentShape.setAttribute("y2", e.offsetY);
+} else if (shapeSelect.value === "rect") {
+let w = e.offsetX - startX;
+let h = e.offsetY - startY;
+currentShape.setAttribute("width", Math.abs(w));
+currentShape.setAttribute("height", Math.abs(h));
+currentShape.setAttribute("x", w < 0 ? e.offsetX : startX);
+currentShape.setAttribute("y", h < 0 ? e.offsetY : startY);
+}
+});
+
+canvas.addEventListener("mouseup", () => {
+drawing = false;
+});
+</script>
+</body>
+</html>
